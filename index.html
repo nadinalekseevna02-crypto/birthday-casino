@@ -1,4 +1,440 @@
-document.getElementById("jackpot").style.display = "block";
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Birthday Casino — Михаил</title>
+
+<style>
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    font-family: Arial, sans-serif;
+    background:
+        radial-gradient(circle at top, #3a0d55 0%, #12051d 45%, #050208 100%);
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow-x: hidden;
+}
+
+.container {
+    width: 95%;
+    max-width: 900px;
+    padding: 25px;
+    text-align: center;
+}
+
+h1 {
+    margin: 0;
+    font-size: clamp(35px, 8vw, 70px);
+    letter-spacing: 5px;
+    color: #ffd700;
+    text-shadow:
+        0 0 10px #ffd700,
+        0 0 30px #ff8c00;
+}
+
+.subtitle {
+    margin: 8px 0 25px;
+    font-size: 18px;
+    letter-spacing: 3px;
+    color: #fff;
+}
+
+.casino {
+    background: linear-gradient(145deg, #210b2e, #0d0612);
+    border: 3px solid #ffd700;
+    border-radius: 25px;
+    padding: 30px 20px;
+    box-shadow:
+        0 0 25px rgba(255, 215, 0, .35),
+        inset 0 0 30px rgba(255, 0, 170, .08);
+}
+
+.stats {
+    display: flex;
+    justify-content: center;
+    gap: 35px;
+    flex-wrap: wrap;
+    margin-bottom: 25px;
+}
+
+.stat {
+    min-width: 150px;
+}
+
+.stat-title {
+    font-size: 13px;
+    color: #aaa;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+.stat-value {
+    margin-top: 5px;
+    font-size: 28px;
+    font-weight: bold;
+    color: #ffd700;
+}
+
+.machine {
+    background: #050505;
+    border: 3px solid #b400ff;
+    border-radius: 18px;
+    padding: 25px 15px;
+    box-shadow: 0 0 25px rgba(180, 0, 255, .4);
+}
+
+.reels {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 25px;
+}
+
+.reel {
+    width: 28%;
+    max-width: 180px;
+    height: 120px;
+    background: linear-gradient(#fff, #ddd);
+    border-radius: 12px;
+    border: 4px solid #ffd700;
+    color: #111;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: clamp(35px, 8vw, 60px);
+    box-shadow:
+        inset 0 0 15px rgba(0,0,0,.35),
+        0 0 12px rgba(255,215,0,.4);
+}
+
+.reel.spinning {
+    animation: shake .12s infinite;
+}
+
+@keyframes shake {
+    0% { transform: translateY(-3px); }
+    50% { transform: translateY(3px); }
+    100% { transform: translateY(-3px); }
+}
+
+.spin-btn {
+    border: none;
+    cursor: pointer;
+    padding: 18px 55px;
+    border-radius: 50px;
+    font-size: 22px;
+    font-weight: bold;
+    color: #18001f;
+    background: linear-gradient(180deg, #ffe76b, #ffae00);
+    box-shadow:
+        0 5px 0 #a86600,
+        0 0 25px rgba(255,215,0,.5);
+    transition: .15s;
+}
+
+.spin-btn:hover {
+    transform: translateY(-2px);
+    box-shadow:
+        0 7px 0 #a86600,
+        0 0 35px rgba(255,215,0,.8);
+}
+
+.spin-btn:active {
+    transform: translateY(4px);
+    box-shadow: 0 2px 0 #a86600;
+}
+
+.spin-btn:disabled {
+    opacity: .5;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.message {
+    min-height: 55px;
+    margin-top: 22px;
+    font-size: 22px;
+    font-weight: bold;
+    color: #ffd700;
+}
+
+.progress {
+    margin: 20px auto 0;
+    width: 90%;
+    height: 10px;
+    background: #2a1a31;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.progress-bar {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, #b400ff, #ffd700);
+    transition: width .4s;
+}
+
+.history {
+    margin-top: 25px;
+}
+
+.history-title {
+    color: #aaa;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+.history-list {
+    display: flex;
+    justify-content: center;
+    gap: 7px;
+    flex-wrap: wrap;
+    margin-top: 10px;
+}
+
+.history-item {
+    padding: 7px 11px;
+    border-radius: 20px;
+    background: #28152f;
+    border: 1px solid #633870;
+    font-size: 14px;
+}
+
+.jackpot {
+    display: none;
+    margin-top: 25px;
+    padding: 30px 15px;
+    border: 3px solid #ffd700;
+    border-radius: 20px;
+    background:
+        radial-gradient(circle, #4c1260, #16051e);
+    animation: jackpot 1s infinite alternate;
+}
+
+@keyframes jackpot {
+from {
+        box-shadow: 0 0 15px #ffd700;
+    }
+    to {
+        box-shadow:
+            0 0 50px #ffd700,
+            0 0 80px #b400ff;
+    }
+}
+
+.jackpot h2 {
+    margin: 0 0 15px;
+    font-size: 35px;
+    color: #ffd700;
+}
+
+.mouse {
+    font-size: 70px;
+    margin: 10px;
+}
+
+.jackpot-text {
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.footer {
+    margin-top: 18px;
+    color: #777;
+    font-size: 12px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <h1>🎰 BIRTHDAY CASINO 🎰</h1>
+    <div class="subtitle">★ МИХАИЛ — ONE NIGHT ONLY ★</div>
+
+    <div class="casino">
+
+        <div class="stats">
+
+            <div class="stat">
+                <div class="stat-title">Баланс</div>
+                <div class="stat-value" id="balance">0 ₽</div>
+            </div>
+
+            <div class="stat">
+                <div class="stat-title">Осталось вращений</div>
+                <div class="stat-value" id="spins">15</div>
+            </div>
+
+        </div>
+
+        <div class="machine">
+
+            <div class="reels">
+                <div class="reel" id="reel1">7️⃣</div>
+                <div class="reel" id="reel2">🍒</div>
+                <div class="reel" id="reel3">💎</div>
+            </div>
+
+            <button class="spin-btn" id="spinButton" onclick="spin()">
+                🎰 КРУТИТЬ
+            </button>
+
+            <div class="message" id="message">
+                Ну что, Михаил... испытаем удачу? 😈
+            </div>
+
+            <div class="progress">
+                <div class="progress-bar" id="progressBar"></div>
+            </div>
+
+        </div>
+
+        <div class="history">
+            <div class="history-title">История выигрышей</div>
+            <div class="history-list" id="history"></div>
+        </div>
+
+        <div class="jackpot" id="jackpot">
+
+            <h2>🎉 ДЖЕКПОТ! 🎉</h2>
+
+            <div class="mouse">🖱️</div>
+
+            <div class="jackpot-text">
+                + 3 000 ₽
+            </div>
+
+            <div class="jackpot-text">
+                + 🖱️ Lunacy One (LWOW)
+            </div>
+
+            <p>
+                С ДНЁМ РОЖДЕНИЯ, МИХАИЛ! 🥳
+            </p>
+
+        </div>
+
+    </div>
+
+    <div class="footer">
+        BIRTHDAY CASINO • 15 SPINS • GOOD LUCK 🍀
+    </div>
+
+</div>
+
+<script>
+
+let spinsLeft = 15;
+let balance = 0;
+let spinNumber = 0;
+
+/*
+    Сумма всех денежных выигрышей = 3000 ₽
+*/
+const prizes = [
+    100,
+    0,
+    200,
+    100,
+    300,
+    0,
+    200,
+    400,
+    0,
+    300,
+    200,
+    0,
+    300,
+    400,
+    500
+];
+
+const symbols = [
+    "🍒",
+    "🍋",
+    "⭐",
+    "💎",
+    "7️⃣",
+    "🍀",
+    "🔔"
+];
+
+function randomSymbol() {
+    return symbols[Math.floor(Math.random() * symbols.length)];
+}
+
+function spin() {
+
+    if (spinsLeft <= 0) return;
+
+    const button = document.getElementById("spinButton");
+    const reels = [
+        document.getElementById("reel1"),
+        document.getElementById("reel2"),
+        document.getElementById("reel3")
+    ];
+
+    button.disabled = true;
+
+    spinNumber++;
+    spinsLeft--;
+
+    document.getElementById("spins").textContent = spinsLeft;
+
+    reels.forEach(reel => {
+        reel.classList.add("spinning");
+    });
+
+    let animationTime = 1200;
+
+    let interval = setInterval(() => {
+
+        reels.forEach(reel => {
+            reel.textContent = randomSymbol();
+        });
+
+    }, 80);
+
+    setTimeout(() => {
+
+        clearInterval(interval);
+
+        reels.forEach(reel => {
+            reel.classList.remove("spinning");
+        });
+
+        /*
+            Последнее вращение превращается
+            в особый финальный приз.
+        */
+
+        if (spinNumber === 15) {
+
+            reels[0].textContent = "🖱️";
+            reels[1].textContent = "🖱️";
+            reels[2].textContent = "🖱️";
+
+            balance += 3000;
+
+            document.getElementById("balance").textContent =
+                balance.toLocaleString("ru-RU") + " ₽";
+
+            addHistory("🖱️ + 3 000 ₽");
+
+            document.getElementById("message").innerHTML =
+                "💥 ФИНАЛ! ТЫ ЗАБРАЛ ДЖЕКПОТ! 💥";
+                    document.getElementById("jackpot").style.display = "block";
 
             document.getElementById("progressBar").style.width = "100%";
 
